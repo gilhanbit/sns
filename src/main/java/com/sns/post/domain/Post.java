@@ -1,4 +1,4 @@
-package com.sns.post.mapper.domain;
+package com.sns.post.domain;
 
 import lombok.Data;
 import lombok.ToString;
