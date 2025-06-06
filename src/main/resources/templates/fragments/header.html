@@ -6,9 +6,14 @@
       <div>
         <h2 class="text-white">wegram</h2>
       </div>
-      <div>
-        <span class="text-white pr-3">OO님 안녕하세요</span>
-        <button type="button" class="btn btn-success"><a href="#" class="text-white">로그아웃</a></button>
+
+      <div th:if="${session.userName == null}">
+        <a href="/sns/sign-in" class="text-white">로그인</a>
+      </div>
+
+      <div th:unless="${session.userName == null}">
+        <span th:text="|${session.userName}님 안녕하세요.|"></span>
+        <a href="/sns/sign-out" class="text-white">로그아웃</a>
       </div>
     </div>
   </header>
