@@ -24,10 +24,9 @@
         )
     </insert>
 
-    <select id="selectUser" parameterType="com.sns.user.domain.User">
+    <select id="selectUser" resultType="com.sns.user.domain.User">
         SELECT
-            `loginId`
-            ,`password`
+            *
         FROM
             `user`
         WHERE

@@ -1,7 +1,47 @@
-header{height: 100px;}
-.content{height: 600px;}
-.sign-up-box{max-width: 600px;}
-.sign-in-box{max-width: 600px;}
-.sign-in-input{width: 350px;}
-.post-box{max-width: 600px; border: solid 1px;}
-.profile-box{max-width: 600px; border: solid 1px;}
+a, a:hover {
+    color:#000;
+    text-decoration:none;
+}
+
+header {
+    height:80px;
+    background-color:#ededed;
+}
+.sign-up-box {
+    width:650px;
+    background-color:#ebebeb;
+    margin-top:20px;
+    box-shadow:5px 5px 5px 5px #BDC0C0;
+}
+.sign-up-subject {
+    margin:20px;
+    font-weight:bold;
+}
+
+.shadow-box {
+    width:550px;
+    background-color:#ebebeb;
+    margin-top:20px;
+    box-shadow:5px 5px 5px 5px #BDC0C0;
+}
+
+.sign-in-box {
+    width:600px;
+}
+
+.sign-in-input{
+    width:350px;
+}
+
+.contents-box {
+    width:650px;
+}
+
+#writeTextArea {
+    height:100px;
+    width:650px;
+}
+
+.comment-input {
+    width:565px;
+}

@@ -126,7 +126,7 @@
                 }
 
                 let url = $("#sign-up-form").attr("action");
-                let params = $(this).serialize();
+                let params = $("#sign-up-form").serialize();
 
                 $.post(url, params)
                 .done(function(data) {

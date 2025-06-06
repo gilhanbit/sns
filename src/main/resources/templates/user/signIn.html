@@ -25,7 +25,7 @@
                     </div>
                 </div>
 
-                <div class="mt-3  sign-in-input" style="margin: auto">
+                <div class="mt-3 sign-in-input" style="margin: auto">
                     <div class="d-flex justify-content-between">
                         <a href="/user/sign-up" class="btn btn-secondary col-4">회원가입</a>
                         <button type="submit" id="loginBtn" class="btn btn-info col-4 text-white">로그인</button>
@@ -60,7 +60,7 @@
                 $.post(url, params)
                 .done(function(data) {
                     if (data.result == "success") {
-                        location.href = "/post/post-list";
+                        location.href = "/sns/timeline";
                     } else {
                         alert(data.error_message);
                     }
