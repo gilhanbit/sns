@@ -8,4 +8,21 @@
         FROM
             `post`
     </select>
+
+    <select id="selectByPostId" resultType="com.sns.post.domain.Post">
+        SELECT
+            *
+        FROM
+            `post`
+        WHERE
+            `id` = #{postId}
+    </select>
+
+    <delete id="deleteCardByPostId">
+        DELETE
+        FROM
+            `post`
+        WHERE
+            `id` = #{postId}
+    </delete>
 </mapper>

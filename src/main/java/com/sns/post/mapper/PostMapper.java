@@ -8,5 +8,7 @@ import java.util.List;
 @Mapper
 public interface PostMapper {
 
-    public List<Post> selectListTest();
+    public Post selectByPostId(int postId);
+
+    public void deleteCardByPostId(int postId);
 }

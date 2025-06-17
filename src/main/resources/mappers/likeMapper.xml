@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sns.like.mapper.LikeMapper">
+
+    <!-- selectLikeCountByUserIdPostId, selectCountLike 카운트 쿼리를 하나로 합치기(옵션) -->
+<!--    <select id="selectLikeCountByPostIdOrUserId" parameterType="map" resultType="int">-->
+<!--        SELECT-->
+<!--            COUNT(1)-->
+<!--        FROM-->
+<!--            `like`-->
+<!--        WHERE-->
+<!--            `postId` = #{postId}-->
+<!--            <if test="userId != null">-->
+<!--            AND `userId` = #{userId}-->
+<!--            </if>-->
+<!--    </select>-->
+
+    <select id="selectLikeCountByUserIdPostId" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            `like`
+        WHERE
+            `postId` = #{postId}
+            AND `userId` = #{userId}
+    </select>
+    
+    <delete id="delLike">
+        DELETE
+        FROM
+            `like`
+        WHERE
+            `postId` = #{postId}
+            AND `userId` = #{userId}
+    </delete>
+    
+    <insert id="addLike">
+        INSERT INTO `like`
+        (
+            `postId`
+            , `userId`
+            , `createdAt`
+        )
+        VALUES
+        (
+            #{postId}
+            , #{userId}
+            , NOW()
+        )
+    </insert>
+    
+    <select id="selectCountLike" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            `like`
+        WHERE
+            `postId` = #{postId}
+    </select>
+
+    <select id="selectFilledLike">
+        SELECT
+            *
+        FROM
+            `like`
+        WHERE
+            `postId` = #{postId}
+            AND `userId` = #{userId}
+    </select>
+
+    <delete id="deleteLikeByPostId">
+        DELETE
+        FROM
+            `like`
+        WHERE
+            `postId` = #{postId}
+    </delete>
+</mapper>
