@@ -8,4 +8,12 @@
         FROM
             `post`
     </select>
+
+    <delete id="deleteCardByPostId">
+        DELETE
+        FROM
+            `post`
+        WHERE
+            `id` = #{postId}
+    </delete>
 </mapper>

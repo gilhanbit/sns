@@ -131,7 +131,7 @@
                 $.post(url, params)
                 .done(function(data) {
                     if (data.result == "success") {
-                        location.href = "/post/post-list";
+                        location.href = "/sns/sign-in";
                     } else {
                         alert(data.error_message);
                     }

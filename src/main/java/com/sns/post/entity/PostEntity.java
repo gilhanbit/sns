@@ -1,6 +1,7 @@
 package com.sns.post.entity;
 
 
+import com.sns.timeline.domain.CardDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

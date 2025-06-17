@@ -44,7 +44,7 @@ public class UserController {
         session.removeAttribute("userId");
         session.removeAttribute("userName");
         session.removeAttribute("userLoginId");
-        return "redirect:/sns/sign-in";
+        return "redirect:/timeline";
     }
 
 }

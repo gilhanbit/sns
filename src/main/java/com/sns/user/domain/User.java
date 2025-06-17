@@ -1,7 +1,12 @@
 package com.sns.user.domain;
 
+import lombok.Data;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 
+@ToString
+@Data
 public class User {
     private int id;
     private String loginId;
@@ -11,68 +16,4 @@ public class User {
     private String profileImagePath;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getProfileImagePath() {
-        return profileImagePath;
-    }
-
-    public void setProfileImagePath(String profileImagePath) {
-        this.profileImagePath = profileImagePath;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getLoginId() {
-        return loginId;
-    }
-
-    public void setLoginId(String loginId) {
-        this.loginId = loginId;
-    }
 }

@@ -8,13 +8,13 @@
     <section class="contents d-flex justify-content-center">
         <div class="contents-box">
             <!-- 글쓰기 영역(로그인 된 사람만 보임) -->
-            <div th:if="${session.userId != null}" class="write-box border rounded mt-5">
+            <div th:if="${session.userId != null}" class="write-box border rounded my-3">
                 <textarea id="writeTextArea" placeholder="내용을 입력해주세요" class="w-100 border-0"></textarea>
 
                 <div class="d-flex justify-content-between">
                     <div class="file-upload d-flex">
                         <!-- file 태그를 숨겨두고 이미지를 클릭하면 파일을 클릭한 것과 같은 효과를 준다. -->
-                        <input type="file" id="file" accept=".jpg, .png, .gif" class="d-none">
+                        <input type="file" id="file" accept=".jpg, .jpeg, .png, .gif" class="d-none">
 
                         <!-- 이미지에 마우스 올리면 마우스 커서가 link로 변경 -->
                         <a href="#" id="fileUploadBtn"><img width="35" src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-512.png"></a>
@@ -29,98 +29,116 @@
             <div class="timeline-box my-5">
 
                 <!-- 글(카드) 반복 -->
-                <div th:each="post : ${postList}" class="card border rounded mt-3">
+                <div th:each="card : ${cardList}" class="card border rounded mt-3">
                     <!-- 글쓴이, 더보기(삭제) -->
                     <div class="p-2 d-flex justify-content-between">
-                        <span th:text="${post.userId}" class="font-weight-bold">글쓴이</span>
+                        <span class="font-weight-bold" th:text="${card.user.name}">글쓴이</span>
 
                         <!-- 더보기 ...(로그인 된 사람과 글쓴이 정보 일치할 때 보이게) -->
-                        <a th:if="${session.userId == post.userId}" href="#" class="more-btn">
+                        <a href="#" class="more-btn" th:if="${session.userId == card.post.userId}" th:data-post-id="${card.post.id}" data-toggle="modal" data-target="#modal">
                             <img src="https://www.iconninja.com/files/860/824/939/more-icon.png" width="30">
                         </a>
                     </div>
 
                     <!-- 본문 이미지 -->
                     <div class="card-img">
-                        <img th:src="${post.imagePath}" class="w-100" alt="본문 이미지">
+                        <img th:src="${card.post.imagePath}" class="w-100" alt="본문 이미지">
                     </div>
 
                     <!-- 좋아요 -->
-                    <div class="card-like m-2">
-                        <a href="#" class="like-btn">
-                            <img src="https://www.iconninja.com/files/214/518/441/heart-icon.png" width="18" height="18" alt="empty heart">
+                    <div class="card-like m-3">
+                        <a href="#" th:data-post-id="${card.post.id}" class="like-btn">
+                            <img src="https://www.iconninja.com/files/214/518/441/heart-icon.png" width="18" height="18" alt="empty heart" class="emptyHeart" th:if="${card.filledLike==false}">
                         </a>
-                        <span>좋아요 13개</span>
+                        <a href="#" th:data-post-id="${card.post.id}" class="like-btn">
+                            <img src="https://www.iconninja.com/files/352/685/147/heart-icon.png" width="18" height="18" alt="fill heart" class="fillHeart" th:unless="${card.filledLike==false}">
+                        </a>
+                        <span th:text="|좋아요 ${card.likeCount}개|"></span>
                     </div>
 
                     <!-- 글 -->
-                    <div th:text="${post.content}" class="card-post m-3">
-                        <span th:text="${post.userId}" class="font-weight-bold">글쓴이</span>
-                        <span>글 내용입니다!!!!</span>
+                    <div class="card-post m-3">
+                        <span class="font-weight-bold" th:text="${card.user.name}">글쓴이</span>
+                        <span th:text="${card.post.content}">글 내용입니다!!!!</span>
                     </div>
 
                     <!-- 댓글 제목 -->
                     <div class="card-comment-title border-bottom">
-                        <div class="font-weight-bold ml-3 mb-3">댓글</div>
+                        <div class="font-weight-bold ml-3 mb-1">댓글</div>
                     </div>
 
                     <!-- 댓글 목록 -->
-                    <div th:each="comment : ${commentList}" class="card-comment-list m-2">
+                    <div class="card-comment-list m-2">
                         <!-- 댓글들 -->
-                        <div th:if="${post.id == comment.postId}" class="card-comment m-1">
-                            <span th:text="${comment.userId}" class="font-weight-bold">댓글쓰니</span>
-                            <span th:text="${comment.content}">댓글 내용임</span>
+                        <div th:each="comment: ${card.commentList}" class="card-comment m-1">
+                            <span class="font-weight-bold" th:text="${comment.user.name}">댓글쓰니</span>
+                            <span th:text="${comment.comment.content}">댓글 내용임</span>
 
                             <!-- 댓글 삭제(자신의 댓글만 가능) -->
-                            <a th:if="${session.userId == comment.userId}" href="#" class="comment-del-btn">
+                            <a th:if="${comment.user.id == session.userId}" href="#" class="comment-del-btn" th:data-comment-id="${comment.comment.id}">
                                 <img src="https://www.iconninja.com/files/603/22/506/x-icon.png" width="10" height="10">
                             </a>
                         </div>
-                    </div>
 
-                    <!-- 댓글 쓰기 -->
-                    <div th:if="${session.userId != null}" class="comment-write d-flex justify-content-between mt-2">
-                        <input type="text" id="comment" class="comment-input form-control border-1 mr-2" placeholder="댓글 달기">
-                        <button type="button" class="comment-btn btn btn-info" th:data-comment-id="${post.id}">게시</button>
-                    </div>
+                        <!-- 댓글 쓰기 -->
+                        <div th:if="${session.userId != null}" class="comment-write d-flex border-top mt-2">
+                            <input type="text" class="comment-input form-control border-0 mr-2" placeholder="댓글 달기">
+                            <button type="button" class="comment-btn btn btn-light" th:data-post-id="${card.post.id}">게시</button>
+                        </div>
+                    </div> <!-- 댓글 끝 -->
                 </div> <!-- 카드 끝 -->
             </div> <!-- 타임라인 박스 끝 -->
         </div> <!-- 컨텐츠 박스 끝 -->
     </section>
 
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="py-3 border-bottom">
+                    <a href="#" id="cardDeleteBtn">삭제</a>
+                </div>
+                <div class="py-3">
+                    <a href="#" data-dismiss="modal">취소</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        $(function(){
+        $(function() {
+            // 이미지 a 태그 클릭 => 숨겨져 있는 file을 동작 시킴
             $("#fileUploadBtn").on("click", function(e) {
                 e.preventDefault(); // 위로 올라가는 현상 방지
                 $("#file").click();
             });
 
+
             // 파일이 선택될 때
             $("#file").on("change", function(e) {
-                let fileName = e.target.files[0].name; // (target == this) 업로드된 파일의 0번 째 이름
+                //alert("파일선택");
+                let fileName = e.target.files[0].name;
                 console.log(fileName);
 
                 let ext = fileName.split(".").pop().toLowerCase();
                 console.log(ext);
-                // 과거에 파일을 업로드하려다 취소할 경우 null로 들어가 split과정에서 type 에러를 뱉었지만, 현재 최신 브라우저의 경우 change 액션에 접근하지 않아서 에러 발생이 없음
-                // 만약 이를 방지하려면 change 할 때, 없을 경우 return 코드를 추가해주면 됨
-                // if(!e.target.files || !e.target.files[0]){return;}
-                // if(e.target.files[0] == null){return;}
 
                 // 확장자 검사
-                if (ext != "gif" && ext != "jpg" && ext != "png") {
-                  alert("이미지만 업로드 할 수 있습니다.");
-                  $("#file").val(""); // 보이진 않지만 파일태그에 올라온 것 제거
-                  $("#fileName").text(""); // 파일명 초기화
-                  return;
+                if (ext != "gif" && ext != "jpeg" && ext != "jpg" && ext != "png") {
+                    alert("이미지만 업로드 할 수 있습니다.");
+                    $("#file").val(""); // 보이진 않지만 파일태그에 올라온 것 제거
+                    $("#fileName").text(""); // 파일명 초기화
+                    return;
                 }
 
                 // 파일명 옆에 노출
                 $("#fileName").text(fileName);
-            });
+            }); // --- 파일 확장자 확인 끝
 
-            $("#writeBtn").on("click",function() {
-                let writeTextArea = $("#writeTextArea").val().trim();
+
+            // 글쓰기
+            $("#writeBtn").on('click', function() {
+                //alert("게시 버튼");
 
                 // 내용 비필수
                 let content = $('#writeTextArea').val();
@@ -129,7 +147,7 @@
                 // 이미지 필수
                 let file = $('#file').val();
                 if (!file) {
-                    alert('이미지 파일을 업로드 해주세요.');
+                    alert('파일을 업로드 해주세요');
                     return;
                 }
 
@@ -146,44 +164,86 @@
                 formData.append("content", content);
                 formData.append("file", $('#file')[0].files[0]); // $('#file')[0]은 첫번째 input file 태그를 의미, files[0]는 업로드된 첫번째 파일
 
+                // AJAX form 데이터 전송
                 $.ajax({
-                    type:"post"
-                    ,url:"/post/write"
-                    ,data:formData
-                    ,processData:false
-                    ,contentType:false
-                    ,enctype:"multipart/form-data"
-                    ,success:function(data){
-                        if(data.code == 200){
-                            location.reload();
-                        } else {
-                            alert("data.error_message");
-                        }
-                    }
-                    ,error:function(e){
-                        alert("게시에 실패했습니다.");
-                    }
-                })
-            })
+                    // request
+                    type: "post"
+                    , url: "/post/create"
+                    , data: formData
+                    , enctype: "multipart/form-data"    // 파일 업로드를 위한 필수 설정
+                    , processData: false    // 파일 업로드를 위한 필수 설정
+                    , contentType: false    // 파일 업로드를 위한 필수 설정
 
-            $(".comment-btn").on("click", function(e) {
+                    // response
+                    , success: function(data) {
+                      if (data.code == 200) {
+                          location.reload();
+                      } else if (data.code == 403) { // 비로그인 일 때
+                          location.href = "/sns/sign-in";
+                      } else {
+                          alert(data.error_message);
+                      }
+                    }
+                    , error: function(e) {
+                      alert("글 저장에 실패했습니다. 관리자에게 문의해주세요.");
+                    }
+                });
+            }); // --- 글쓰기 끝
+
+
+            // 더보기 버튼
+            $(".more-btn").on("click", function(){
+                let postId = $(this).data("post-id"); // get
+                //alert(postId);
+                $("#modal").data("post-id", postId); // set
+            });
+
+            // 더보기-삭제
+            $("#cardDeleteBtn").on("click", function(e){
                 e.preventDefault();
-                let postId = $(this).data('comment-id');
-                let commentContent = $("#comment").val().trim();
-                console.log(commentContent);
+                let postId = $("#modal").data("post-id");
+                //alert(postId);
 
-                if(commentContent == null){
-                    alert("내용을 입력하세요.");
+                if(confirm("정말 삭제하시겠습니까?") === false){ // 취소 시 리턴이기 때문에 false
                     return;
                 }
 
                 $.ajax({
+                    type:"delete"
+                    , url:"/post/delete"
+                    , data:{"postId":postId}
+                    , success:function(data){
+                        if(data.code==403){
+                            alert(data.error_message);
+                        }
+                        location.reload();
+                    }
+                    , error:function(e){
+                        alert("삭제에 실패하였습니다.");
+                    }
+                });
+            }); // --- 더보기 끝
+
+
+            // 댓글 쓰기
+            $(".comment-btn").on("click", function() {
+                let postId = $(this).data("post-id");
+                //alert(postId);
+
+                let commentContent = $(this).siblings("input").val().trim();
+                //alert(commentContent);
+
+                $.ajax({
                     type:"post"
-                    , url:"/comment/write"
+                    , url:"/comment/create"
                     , data:{"postId":postId, "content":commentContent}
                     , success:function(data) {
                         if (data.code == 200) {
                             location.reload();
+                        } else if (data.code == 403) {
+                            // 비로그인
+                            alert(data.error_message);
+                            location.href = "/sns/sign-in"; // 로그인 화면으로 이동
                         } else {
                             alert(data.error_message);
                         }
@@ -192,8 +252,58 @@
                         alert("댓글 쓰기에 실패했습니다.");
                     }
                 });
-            });
+            }); // --- 댓글쓰기 끝
+
+
+            // 댓글 삭제
+            $(".comment-del-btn").on("click", function() {
+                event.preventDefault(); // 위로 올라가는 현상 방지
+
+                let commentId = $(this).data('comment-id');
+                //alert(commentId);
+
+                $.ajax({
+                  type:"DELETE"
+                  , url:"/comment/delete"
+                  , data:{"commentId":commentId}
+                  , success:function(data) {
+                      if (data.code == 200) {
+                          location.reload(true);
+                      } else {
+                          alert(data.error_message);
+                      }
+                  }
+                  , error:function(e) {
+                      alert("댓글 삭제 하는데 실패했습니다.");
+                  }
+                });
+            }); // --- 댓글 삭제 끝
+
+
+            // 좋아요 toggle
+            $(".like-btn").on("click", function(e){
+                e.preventDefault();
+
+                let postId = $(this).data('post-id');
+                //alert(postId);
+
+                $.ajax({
+                    //type:"get" 기본으로 생략 가능
+                    url:"/like/" + postId // postId는 string이 아니므로 주의!!!
+                    //data는 post가 아닌 get으로 url에서 postId를 받으므로 불필요
+                    , success:function(data){
+                        if(data.result == "성공"){ // 새로고침 -> 카드 리스트 가져올 때, 하트를 채울지 말지 결정되므로
+                            location.reload();
+                        } else if(data.code == 403) {
+                            alert(data.error_message);
+                            location.href = "/sns/sign-in";
+                        }
+                    }
+                    , error:function(){
+                        alert("좋아요에 실패했습니다.");
+                    }
+                });
+            }); // --- 좋아요 toggle 끝
         });
     </script>
 </th:block>
-</html>
